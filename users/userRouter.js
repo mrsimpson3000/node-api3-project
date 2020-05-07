@@ -21,17 +21,27 @@ router.get("/", (req, res) => {
     })
     .catch((error) => {
       console.log(error);
-      res
-        .status(500)
-        .json({
-          message:
-            "The users information could not be returned from the database",
-        });
+      res.status(500).json({
+        error: "The users information could not be returned from the database.",
+      });
     });
 });
 
-router.get("/:id", (req, res) => {
-  // do your magic!
+// Gets a single user by their id
+router.get("/:id", validateUserId, (req, res) => {
+  Users.getById(req.params.id)
+    .then((response) => {
+      res.status(200).json(response);
+    })
+    .catch((error) => {
+      console.log(error);
+      res
+        .status(500)
+        .json({
+          error:
+            "The user information could not be returned from the database.",
+        });
+    });
 });
 
 router.get("/:id/posts", (req, res) => {
