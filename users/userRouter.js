@@ -35,17 +35,26 @@ router.get("/:id", validateUserId, (req, res) => {
     })
     .catch((error) => {
       console.log(error);
+      res.status(500).json({
+        error: "The user information could not be returned from the database.",
+      });
+    });
+});
+
+// Returns all the posts for the user identified by the id
+router.get("/:id/posts", validateUserId, (req, res) => {
+  Users.getUserPosts(req.params.id)
+    .then((response) => {
+      res.status(200).json(response);
+    })
+    .catch((error) => {
       res
         .status(500)
         .json({
           error:
-            "The user information could not be returned from the database.",
+            "The posts for the user specicified could not be returned from the database.",
         });
     });
-});
-
-router.get("/:id/posts", (req, res) => {
-  // do your magic!
 });
 
 router.delete("/:id", (req, res) => {
