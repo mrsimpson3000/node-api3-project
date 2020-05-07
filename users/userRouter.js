@@ -5,12 +5,36 @@ const router = express.Router();
 const Users = require("./userDb");
 const Posts = require("../posts/postDb");
 
-router.post("/", (req, res) => {
-  // do your magic!
+router.post("/", validateUser, (req, res) => {
+  Users.insert(req.body)
+    .then((response) => {
+      res.status(200).json(response);
+    })
+    .catch((error) => {
+      res
+        .status(500)
+        .json({
+          error: "There was an error while saving the user to the database.",
+        });
+    });
 });
 
-router.post("/:id/posts", (req, res) => {
-  // do your magic!
+router.post("/:id/posts", validateUserId, validatePost, (req, res) => {
+  Posts.insert({
+    ...req.body,
+    user_id: req.params.id,
+  })
+    .then((response) => {
+      res.status(200).json(response);
+    })
+    .catch((error) => {
+      console.log(error);
+      res
+        .status(500)
+        .json({
+          error: "They was an error while saving the post to the database.",
+        });
+    });
 });
 
 // Gets all users (array)
@@ -48,12 +72,10 @@ router.get("/:id/posts", validateUserId, (req, res) => {
       res.status(200).json(response);
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({
-          error:
-            "The posts for the user specicified could not be returned from the database.",
-        });
+      res.status(500).json({
+        error:
+          "The posts for the user specicified could not be returned from the database.",
+      });
     });
 });
 
