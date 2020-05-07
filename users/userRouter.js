@@ -88,8 +88,28 @@ router.delete("/:id", validateUserId, (req, res) => {
     });
 });
 
-router.put("/:id", (req, res) => {
-  // do your magic!
+// there is nothing about what to return but i'll return the updated post
+router.put("/:id", validateUserId, validateUser, (req, res) => {
+  Users.update(req.params.id, req.body)
+    .then((response) => {
+      if (response === 1) {
+        Users.getById(req.params.id)
+          .then((response) => {
+            res.status(200).json(response);
+          })
+          .catch((error) => {
+            res
+              .status(500)
+              .json({
+                error:
+                  "The updated user could not be returned from the database.",
+              });
+          });
+      }
+    })
+    .catch((error) => {
+      res.status(500).json({ error: "The user was not updated." });
+    });
 });
 
 //custom middleware
