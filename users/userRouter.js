@@ -11,11 +11,9 @@ router.post("/", validateUser, (req, res) => {
       res.status(200).json(response);
     })
     .catch((error) => {
-      res
-        .status(500)
-        .json({
-          error: "There was an error while saving the user to the database.",
-        });
+      res.status(500).json({
+        error: "There was an error while saving the user to the database.",
+      });
     });
 });
 
@@ -29,11 +27,9 @@ router.post("/:id/posts", validateUserId, validatePost, (req, res) => {
     })
     .catch((error) => {
       console.log(error);
-      res
-        .status(500)
-        .json({
-          error: "They was an error while saving the post to the database.",
-        });
+      res.status(500).json({
+        error: "They was an error while saving the post to the database.",
+      });
     });
 });
 
@@ -79,8 +75,17 @@ router.get("/:id/posts", validateUserId, (req, res) => {
     });
 });
 
-router.delete("/:id", (req, res) => {
-  // do your magic!
+router.delete("/:id", validateUserId, (req, res) => {
+  Users.remove(req.params.id)
+    .then((response) => {
+      res.status(200).json({ message: "The specified user was deleted." });
+    })
+    .catch((error) => {
+      console.log(error);
+      res
+        .status(500)
+        .json({ error: "The specified user could not be deleted." });
+    });
 });
 
 router.put("/:id", (req, res) => {
