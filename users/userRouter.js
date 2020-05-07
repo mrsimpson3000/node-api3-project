@@ -13,8 +13,21 @@ router.post("/:id/posts", (req, res) => {
   // do your magic!
 });
 
+// Gets all users (array)
 router.get("/", (req, res) => {
-  // do your magic!
+  Users.get()
+    .then((response) => {
+      res.status(200).json(response);
+    })
+    .catch((error) => {
+      console.log(error);
+      res
+        .status(500)
+        .json({
+          message:
+            "The users information could not be returned from the database",
+        });
+    });
 });
 
 router.get("/:id", (req, res) => {

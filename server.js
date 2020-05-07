@@ -18,6 +18,7 @@ server.use("/api/posts", logger, postRouter);
 
 function logger(req, res, next) {
   console.log(`${Date()} ${req.method} to ${req.url}`);
+  next();
 }
 
 module.exports = server;
