@@ -34,7 +34,7 @@ router.put("/:id", (req, res) => {
 });
 
 //custom middleware
-// validate user id / if valid store as req.user / else res.status(400).json({ message: "invalid user id" })
+// validate user id
 function validateUserId(req, res, next) {
   Users.getById(req.params.id)
     .then((user) => {
@@ -47,8 +47,15 @@ function validateUserId(req, res, next) {
     });
 }
 
+// validate body of user as well as user name on request to create new user
 function validateUser(req, res, next) {
-  // do your magic!
+  if (!req.body) {
+    res.status(400).json({ message: "missing user data" });
+  } else if (!req.body.name) {
+    res.status(400).json({ message: "missing required name field" });
+  } else {
+    next();
+  }
 }
 
 function validatePost(req, res, next) {
